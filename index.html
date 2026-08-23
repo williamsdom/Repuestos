@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚗 Tienda de Repuestos - AutoShop</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🚗 Repuestos AutoShop</h1>
+            <p>Encuentra los mejores repuestos para tu vehículo</p>
+            <a href="admin.html" class="admin-link">🔧 Administrar Productos</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="filters">
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="🔍 Buscar por nombre, categoría o dirección..." 
+                autocomplete="off"
+            >
+            <select id="categoryFilter">
+                <option value="all">📦 Todas las categorías</option>
+                <!-- Las categorías se cargarán dinámicamente -->
+            </select>
+        </section>
+
+        <section class="products-grid" id="productsGrid">
+            <!-- Los productos se cargarán aquí desde JavaScript -->
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Tienda de Repuestos AutoShop - Todos los derechos reservados</p>
+        <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">
+            🛠️ Encuentra calidad y confianza en cada repuesto
+        </p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Admin - Repuestos AutoShop</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- Pantalla de Login -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-box">
+                <h1>🔐 Panel de Administración</h1>
+                <p>Ingresa tus credenciales para acceder</p>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUser">Usuario</label>
+                        <input type="text" id="loginUser" placeholder="admin" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPass">Contraseña</label>
+                        <input type="password" id="loginPass" placeholder="admin123" required>
+                    </div>
+                    <button type="submit" class="btn-primary">🔓 Iniciar Sesión</button>
+                    <div id="loginError" class="login-error"></div>
+                </form>
+                <div class="login-info">
+                    <small>Credenciales por defecto: admin / admin123</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de Administración (oculto por defecto) -->
+    <div id="adminPanel" style="display: none;">
+        <header>
+            <div class="header-content">
+                <h1>🔧 Panel de Administración</h1>
+                <p>Gestiona productos y categorías de la tienda</p>
+                <div class="admin-actions">
+                    <a href="index.html" class="admin-link">← Volver a la tienda</a>
+                    <button id="logoutBtn" class="btn-danger">🚪 Cerrar Sesión</button>
+                    <button id="resetProductsBtn" class="btn-danger">🔄 Restaurar productos</button>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Gestión de Categorías -->
+            <section class="admin-section">
+                <h2>📂 Gestionar Categorías</h2>
+                <div class="category-manager">
+                    <div class="category-form">
+                        <input type="text" id="newCategoryName" placeholder="Nueva categoría...">
+                        <button id="addCategoryBtn" class="btn-primary">➕ Agregar</button>
+                    </div>
+                    <div class="category-list" id="categoryList">
+                        <!-- Categorías se cargarán aquí -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Formulario para agregar/editar productos -->
+            <section class="admin-section">
+                <h2 id="formTitle">➕ Agregar Nuevo Producto</h2>
+                <form id="productForm" class="admin-form">
+                    <input type="hidden" id="productId" value="">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productName">Nombre del producto *</label>
+                            <input type="text" id="productName" required placeholder="Ej: Filtro de Aire K&N">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productPrice">Precio (RD) *</label>
+                            <input type="number" id="productPrice" required step="0.01" min="0" placeholder="45.99">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productCategory">Categoría *</label>
+                            <select id="productCategory" required>
+                                <!-- Categorías dinámicas -->
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productPhone">Teléfono *</label>
+                            <input type="tel" id="productPhone" required placeholder="+56912345678">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productImage">URL de la imagen</label>
+                        <div class="image-upload-container">
+                            <input type="url" id="productImage" placeholder="https://ejemplo.com/imagen.jpg">
+                            <span class="or-divider">O</span>
+                            <div class="file-upload-wrapper">
+                                <input type="file" id="imageFile" accept="image/*" class="file-input">
+                                <label for="imageFile" class="file-label">📁 Subir imagen</label>
+                            </div>
+                        </div>
+                        <div id="imagePreview" class="image-preview"></div>
+                        <small>Puedes usar una URL o subir una imagen desde tu computadora</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productAddress">Dirección de la tienda *</label>
+                        <input type="text" id="productAddress" required placeholder="Av. Principal 123, Local 5, Santiago">
+                        <small>Esta dirección será enlazada a Google Maps</small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="saveBtn" class="btn-primary">💾 Guardar Producto</button>
+                        <button type="button" id="cancelBtn" class="btn-secondary">❌ Cancelar</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Lista de productos -->
+            <section class="admin-section">
+                <h2>📋 Lista de Productos</h2>
+                <div class="product-stats">
+                    <span id="productCount">0 productos</span>
+                </div>
+                <div class="admin-products-grid" id="adminProductsGrid">
+                    <!-- Productos administrables -->
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2026 Panel de Administración - Tienda de Repuestos AutoShop WD</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
