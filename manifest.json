@@ -1,0 +1,36 @@
+{
+  "name": "LotoPredict RD",
+  "short_name": "LotoPredict",
+  "description": "Sistema de predicción IA para Loto Leidsa República Dominicana",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0047AB",
+  "theme_color": "#0047AB",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["entertainment", "finance"],
+  "scope": "/",
+  "dir": "ltr",
+  "lang": "es-DO",
+  "screenshots": [
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Pantalla principal de LotoPredict RD"
+    }
+  ]
+}
