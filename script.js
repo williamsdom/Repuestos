@@ -21,13 +21,12 @@ function getProducts() {
     const stored = localStorage.getItem('autoShopProducts');
     if (stored) {
         const products = JSON.parse(stored);
-        // Verificar que los productos tengan el campo phone
-        const hasPhone = products.some(p => p.phone !== undefined);
-        if (!hasPhone) {
-            // Agregar teléfono a productos antiguos
+        // Verificar que los productos tengan el campo storeName
+        const hasStoreName = products.some(p => p.storeName !== undefined);
+        if (!hasStoreName) {
             const updatedProducts = products.map(p => ({
                 ...p,
-                phone: p.phone || '+56912345678'
+                storeName: p.storeName || 'AutoShop Repuestos'
             }));
             saveProducts(updatedProducts);
             return updatedProducts;
@@ -42,7 +41,8 @@ function getProducts() {
             category: "motor",
             image: "https://placehold.co/600x400/667eea/white?text=Filtro+de+Aire",
             address: "Av. Principal 123, Local 5, Santiago",
-            phone: "+56912345678"
+            phone: "+56912345678",
+            storeName: "AutoShop Centro"
         },
         {
             id: 2,
@@ -51,7 +51,8 @@ function getProducts() {
             category: "frenos",
             image: "https://placehold.co/600x400/764ba2/white?text=Pastillas+Freno",
             address: "Calle Los Robles 456, Centro, Valparaíso",
-            phone: "+56987654321"
+            phone: "+56987654321",
+            storeName: "Frenos Express"
         },
         {
             id: 3,
@@ -60,7 +61,8 @@ function getProducts() {
             category: "suspension",
             image: "https://placehold.co/600x400/48bb78/white?text=Amortiguadores",
             address: "Av. Los Leones 789, Local 12, Concepción",
-            phone: "+56923456789"
+            phone: "+56923456789",
+            storeName: "Suspensión Total"
         },
         {
             id: 4,
@@ -69,7 +71,8 @@ function getProducts() {
             category: "electrico",
             image: "https://placehold.co/600x400/ed8936/white?text=Batería+Bosch",
             address: "Calle Carmen 321, La Serena",
-            phone: "+56934567890"
+            phone: "+56934567890",
+            storeName: "Baterías del Norte"
         },
         {
             id: 5,
@@ -78,7 +81,8 @@ function getProducts() {
             category: "transmision",
             image: "https://placehold.co/600x400/e53e3e/white?text=Embrague+LUK",
             address: "Av. Libertad 567, Local 8, Rancagua",
-            phone: "+56945678901"
+            phone: "+56945678901",
+            storeName: "Transmisiones Rancagua"
         },
         {
             id: 6,
@@ -87,25 +91,8 @@ function getProducts() {
             category: "motor",
             image: "https://placehold.co/600x400/3182ce/white?text=Bujías+NGK",
             address: "Calle San Martín 234, Temuco",
-            phone: "+56956789012"
-        },
-        {
-            id: 7,
-            name: "Disco de Freno Delantero",
-            price: 95.00,
-            category: "frenos",
-            image: "https://placehold.co/600x400/38a169/white?text=Disco+Freno",
-            address: "Av. España 890, Local 3, Viña del Mar",
-            phone: "+56967890123"
-        },
-        {
-            id: 8,
-            name: "Brazos de Suspensión",
-            price: 156.30,
-            category: "suspension",
-            image: "https://placehold.co/600x400/d69e2e/white?text=Brazos+Suspensión",
-            address: "Calle Prat 456, Talca",
-            phone: "+56978901234"
+            phone: "+56956789012",
+            storeName: "Motor Parts Temuco"
         }
     ];
     localStorage.setItem('autoShopProducts', JSON.stringify(defaultProducts));
@@ -141,9 +128,10 @@ function getGoogleMapsLink(address) {
 }
 
 // Generar enlace de WhatsApp
-function getWhatsAppLink(phone, message = 'Hola, estoy interesado en este repuesto') {
+function getWhatsAppLink(phone, message) {
     const cleanPhone = phone.replace(/\s/g, '').replace(/[^0-9+]/g, '');
-    return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+    const defaultMessage = 'Hola, estoy interesado en este repuesto';
+    return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message || defaultMessage)}`;
 }
 
 // ====================== TIENDA PÚBLICA ======================
@@ -154,13 +142,7 @@ function loadCategoriesFilter() {
     if (!filter) return;
     
     const categories = getCategories();
-    // Mantener la opción "Todas"
-    const allOption = filter.querySelector('option[value="all"]');
-    filter.innerHTML = '';
-    const defaultOption = document.createElement('option');
-    defaultOption.value = 'all';
-    defaultOption.textContent = '📦 Todas las categorías';
-    filter.appendChild(defaultOption);
+    filter.innerHTML = '<option value="all">📦 Todas las categorías</option>';
     
     categories.forEach(cat => {
         const option = document.createElement('option');
@@ -185,7 +167,7 @@ function renderProducts() {
     }
     
     const products = getProducts();
-    console.log(`📦 Mostrando ${products.length} productos`);
+    console.log('📦 Productos cargados:', products.length);
     
     // Aplicar filtros
     const filtered = products.filter(product => {
@@ -193,40 +175,40 @@ function renderProducts() {
         const matchesSearch = searchTerm === '' || 
                              product.name.toLowerCase().includes(searchTerm) ||
                              product.address.toLowerCase().includes(searchTerm) ||
-                             product.category.toLowerCase().includes(searchTerm);
+                             product.category.toLowerCase().includes(searchTerm) ||
+                             (product.storeName && product.storeName.toLowerCase().includes(searchTerm));
         const matchesCategory = currentFilters.category === 'all' || product.category === currentFilters.category;
         return matchesSearch && matchesCategory;
     });
-
-    console.log(`🔍 Filtrados: ${filtered.length} productos`);
 
     if (filtered.length === 0) {
         grid.innerHTML = `
             <div class="no-results">
                 <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🔍</span>
                 <h2>No se encontraron productos</h2>
-                <p>Prueba con otros términos de búsqueda o agrega productos desde el panel de administración</p>
-                <a href="admin.html" class="admin-link" style="margin-top: 1rem;">🔧 Administrar Productos</a>
+                <p>Prueba con otros términos de búsqueda</p>
+                <a href="admin.html" class="admin-link" style="margin-top: 1rem; display: inline-block;">🔧 Administrar Productos</a>
             </div>
         `;
         return;
     }
 
     grid.innerHTML = filtered.map(product => `
-        <div class="product-card" data-category="${product.category}">
+        <div class="product-card">
             <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy" 
                  onerror="this.src='https://placehold.co/600x400/edf2f7/4a5568?text=Imagen+no+disponible'">
             <div class="product-info">
                 <div class="product-category">${getCategoryName(product.category)}</div>
                 <h3 class="product-name">${product.name}</h3>
                 <div class="product-price">
-                    $${product.price.toFixed(2)} <span>RD</span>
+                    $${product.price.toFixed(2)} <span>USD</span>
                 </div>
-                <div class="product-phone">
-                    📞 ${product.phone || 'Sin teléfono'}
+                <div class="product-store-info">
+                    <span class="store-name">🏪 ${product.storeName || 'AutoShop Repuestos'}</span>
+                    <span class="store-phone">📞 ${product.phone || 'Sin teléfono'}</span>
                 </div>
                 <div class="product-actions">
-                    <a href="${getWhatsAppLink(product.phone || '+56912345678', `Hola, quiero información sobre ${product.name}`)}" 
+                    <a href="${getWhatsAppLink(product.phone, `Hola, quiero información sobre ${product.name}`)}" 
                        target="_blank" 
                        class="btn-whatsapp">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -261,67 +243,44 @@ function updateFilters() {
 
 // ====================== INICIALIZACIÓN ======================
 
-// Inicializar la tienda - EJECUTAR CUANDO EL DOM ESTÉ LISTO
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚗 Inicializando tienda de repuestos...');
+// Función para inicializar la tienda
+function initStore() {
+    console.log('🚗 Inicializando tienda...');
+    loadCategoriesFilter();
+    renderProducts();
     
-    // Verificar si estamos en la página principal
-    if (document.getElementById('productsGrid')) {
-        // Cargar categorías en el filtro
-        loadCategoriesFilter();
-        
-        // Configurar event listeners
-        const searchInput = document.getElementById('searchInput');
-        const categoryFilter = document.getElementById('categoryFilter');
-        
-        if (searchInput) {
-            let searchTimeout;
-            searchInput.addEventListener('input', function(e) {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    updateFilters();
-                }, 300);
-            });
-        }
-        
-        if (categoryFilter) {
-            categoryFilter.addEventListener('change', updateFilters);
-        }
-        
-        // IMPORTANTE: Renderizar productos al cargar
-        renderProducts();
-        
-        console.log(`✅ Tienda inicializada con ${getProducts().length} productos`);
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    
+    if (searchInput) {
+        let timeout;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(updateFilters, 300);
+        });
     }
-});
+    
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', updateFilters);
+    }
+}
 
-// También ejecutar inmediatamente si el DOM ya está cargado
+// Inicializar cuando el DOM esté listo
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-        if (document.getElementById('productsGrid')) {
-            renderProducts();
-        }
-    });
+    document.addEventListener('DOMContentLoaded', initStore);
 } else {
-    // El DOM ya está cargado
-    if (document.getElementById('productsGrid')) {
-        renderProducts();
-    }
+    initStore();
 }
 
-// Exportar funciones para usar en admin.js
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { 
-        getProducts, 
-        saveProducts, 
-        getCategories,
-        saveCategories,
-        generateId, 
-        getCategoryName, 
-        getGoogleMapsLink,
-        getWhatsAppLink,
-        renderProducts,
-        loadCategoriesFilter,
-        updateFilters
-    };
-}
+// Hacer funciones globales para admin.js
+window.getProducts = getProducts;
+window.saveProducts = saveProducts;
+window.getCategories = getCategories;
+window.saveCategories = saveCategories;
+window.generateId = generateId;
+window.getCategoryName = getCategoryName;
+window.getGoogleMapsLink = getGoogleMapsLink;
+window.getWhatsAppLink = getWhatsAppLink;
+window.renderProducts = renderProducts;
+window.loadCategoriesFilter = loadCategoriesFilter;
+window.updateFilters = updateFilters;
