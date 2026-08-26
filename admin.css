@@ -397,6 +397,13 @@
     font-weight: 600;
 }
 
+.admin-product-store {
+    font-size: 0.9rem;
+    color: #2d3748;
+    font-weight: 600;
+    margin: 0.3rem 0;
+}
+
 .admin-product-address {
     font-size: 0.85rem;
     color: #718096;
